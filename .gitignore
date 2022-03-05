@@ -1,0 +1,10 @@
+*
+!axi_dna.v
+!axi_dna_ip.tcl
+!axil_read.v
+!axil_write.v
+!generate_ip.tcl
+!Makefile
+!tb_axi_dna.v
+!.gitignore
+!README.md
