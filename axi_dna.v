@@ -21,8 +21,8 @@ module axi_dna #
     parameter PIPELINE_OUTPUT = 0
 )
 (
-    input  wire                      clk,
-    input  wire                      rst,
+    input  wire                      s_axil_clk,
+    input  wire                      s_axil_rstn,
     
     input  wire [ADDR_WIDTH-1:0]     s_axil_awaddr ,
     input  wire [2:0]                s_axil_awprot ,
@@ -45,6 +45,8 @@ module axi_dna #
     input  wire                      s_axil_rready 
 );
 
+    wire s_axil_rst = ~ s_axil_rstn;
+    
     reg [31:0]                    rFPGADNA0       ;
     reg [31:0]                    rFPGADNA1       ;
     reg [31:0]                    rFPGADNA2       ;
@@ -109,8 +111,8 @@ always @* begin
     end
 end
 
-always @(posedge clk) begin
-    if (rst) begin
+always @(posedge s_axil_clk) begin
+    if (s_axil_rst) begin
         s_axil_awready_reg <= 1'b0;
         s_axil_wready_reg <= 1'b0;
         s_axil_bvalid_reg <= 1'b0;
@@ -125,7 +127,7 @@ always @(posedge clk) begin
     //         mem[s_axil_awaddr_valid][WORD_SIZE*i +: WORD_SIZE] <= s_axil_wdata[WORD_SIZE*i +: WORD_SIZE];
     //     end
     // end
-    if (rst) begin
+    if (s_axil_rst) begin
     end
     if (mem_wr_en) begin
     end else begin
@@ -146,8 +148,8 @@ always @* begin
     end
 end
 
-always @(posedge clk) begin
-    if (rst) begin
+always @(posedge s_axil_clk) begin
+    if (s_axil_rst) begin
         s_axil_arready_reg <= 1'b0;
         s_axil_rvalid_reg <= 1'b0;
         s_axil_rvalid_pipe_reg <= 1'b0;
@@ -186,14 +188,14 @@ generate
         )
         DNA_PORT_inst (
           .DOUT(dna_dout),   // 1-bit output: DNA output data.
-          .CLK(clk),     // 1-bit input: Clock input.
+          .CLK(s_axil_clk),     // 1-bit input: Clock input.
           .DIN(1'b0),     // 1-bit input: User data input pin.
           .READ(dna_read),   // 1-bit input: Active high load DNA, active low read input.
           .SHIFT(dna_shift)  // 1-bit input: Active high shift enable input.
         );
 
-        always @ (posedge clk) begin
-            if (rst) begin
+        always @ (posedge s_axil_clk) begin
+            if (s_axil_rst) begin
                 dna_read <= 1'b0;
                 dna_shift <= 1'b0;
                 dna_cnt <= 32'd0;
@@ -231,14 +233,14 @@ generate
         )
         DNA_PORTE2_inst (
           .DOUT(dna_dout),   // 1-bit output: DNA output data.
-          .CLK(clk),     // 1-bit input: Clock input.
+          .CLK(s_axil_clk),     // 1-bit input: Clock input.
           .DIN(1'b0),     // 1-bit input: User data input pin.
           .READ(dna_read),   // 1-bit input: Active high load DNA, active low read input.
           .SHIFT(dna_shift)  // 1-bit input: Active high shift enable input.
         );
 
-        always @ (posedge clk) begin
-            if (rst) begin
+        always @ (posedge s_axil_clk) begin
+            if (s_axil_rst) begin
                 dna_read <= 1'b0;
                 dna_shift <= 1'b0;
                 dna_cnt <= 32'd0;
