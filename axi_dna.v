@@ -52,9 +52,9 @@ module axi_dna #
     reg [31:0]                    rFPGADNA2       ;
     reg [31:0]                    rFPGADNA3       ;
 
-parameter VALID_ADDR_WIDTH = ADDR_WIDTH - $clog2(STRB_WIDTH);
-parameter WORD_WIDTH = STRB_WIDTH;
-parameter WORD_SIZE = DATA_WIDTH/WORD_WIDTH;
+localparam VALID_ADDR_WIDTH = ADDR_WIDTH - $clog2(STRB_WIDTH);
+localparam WORD_WIDTH = STRB_WIDTH;
+localparam WORD_SIZE = DATA_WIDTH/WORD_WIDTH;
 
 reg mem_wr_en;
 reg mem_rd_en;
